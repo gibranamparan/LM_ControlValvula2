@@ -31,11 +31,12 @@
             this.btnRequest = new System.Windows.Forms.Button();
             this.lblGrados = new System.Windows.Forms.Label();
             this.tbGrados = new System.Windows.Forms.TextBox();
-            this.tbGPM = new System.Windows.Forms.TextBox();
             this.lblGPM = new System.Windows.Forms.Label();
             this.tbGPMM = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnActualizar = new System.Windows.Forms.Button();
+            this.tbGPM = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.tbGPM)).BeginInit();
             this.SuspendLayout();
             // 
             // btnRequest
@@ -64,13 +65,6 @@
             this.tbGrados.ReadOnly = true;
             this.tbGrados.Size = new System.Drawing.Size(266, 20);
             this.tbGrados.TabIndex = 2;
-            // 
-            // tbGPM
-            // 
-            this.tbGPM.Location = new System.Drawing.Point(62, 6);
-            this.tbGPM.Name = "tbGPM";
-            this.tbGPM.Size = new System.Drawing.Size(266, 20);
-            this.tbGPM.TabIndex = 4;
             // 
             // lblGPM
             // 
@@ -108,14 +102,27 @@
             this.btnActualizar.UseVisualStyleBackColor = true;
             this.btnActualizar.Click += new System.EventHandler(this.btnActualizar_Click);
             // 
+            // tbGPM
+            // 
+            this.tbGPM.Location = new System.Drawing.Point(62, 7);
+            this.tbGPM.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
+            this.tbGPM.Name = "tbGPM";
+            this.tbGPM.Size = new System.Drawing.Size(266, 20);
+            this.tbGPM.TabIndex = 7;
+            this.tbGPM.ValueChanged += new System.EventHandler(this.tbGPM_ValueChanged);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(343, 115);
+            this.Controls.Add(this.tbGPM);
             this.Controls.Add(this.tbGPMM);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.tbGPM);
             this.Controls.Add(this.lblGPM);
             this.Controls.Add(this.tbGrados);
             this.Controls.Add(this.lblGrados);
@@ -124,6 +131,7 @@
             this.Name = "frmMain";
             this.Text = "Control de Valvula de Aceite";
             this.Load += new System.EventHandler(this.frmMain_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.tbGPM)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -134,11 +142,11 @@
         private System.Windows.Forms.Button btnRequest;
         private System.Windows.Forms.Label lblGrados;
         private System.Windows.Forms.TextBox tbGrados;
-        private System.Windows.Forms.TextBox tbGPM;
         private System.Windows.Forms.Label lblGPM;
         private System.Windows.Forms.TextBox tbGPMM;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnActualizar;
+        private System.Windows.Forms.NumericUpDown tbGPM;
     }
 }
 
