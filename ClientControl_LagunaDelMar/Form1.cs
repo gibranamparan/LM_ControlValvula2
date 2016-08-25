@@ -45,7 +45,7 @@ namespace ClientControl_LagunaDelMar
             ValveParameters valveData = tomarDatosActuales();
             tbGrados.Text = valveData.servoDegrees;
             tbGPM.Value = int.Parse(valveData.servoDegrees);
-            tbGPMM.Text = valveData.GPM;
+            tbGPMM.Text = valveData.GPMM;
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
@@ -93,10 +93,12 @@ namespace ClientControl_LagunaDelMar
     {
         public String GPM { get; set; }
         public String servoDegrees { get; set; }
+        public String GPMM { get; set; }
         public ValveParameters()
         {
             this.GPM = "0";
             this.servoDegrees = "0";
+            this.GPMM = "0";
         }
     }
 
