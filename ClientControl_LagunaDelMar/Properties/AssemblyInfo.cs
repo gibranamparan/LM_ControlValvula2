@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ClientControl_LagunaDelMar")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Sistema para el control de valvula por medio de comunicacion HTTP hacia un arduino. Para uso de Laguna del Mar Resorts, Puerto Peñasco, Son. Mexico.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Netcode Solutions. Gibran Amparan.")]
 [assembly: AssemblyProduct("ClientControl_LagunaDelMar")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
