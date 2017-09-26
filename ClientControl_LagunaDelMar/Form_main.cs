@@ -15,6 +15,7 @@ using ClientControl_LagunaDelMar.DataLayer;
 using static ClientControl_LagunaDelMar.DataLayer.DataAccess_Server;
 using ClientControl_LagunaDelMar.DataLayer.DSSettingsTableAdapters;
 using SETTING_NAMES = ClientControl_LagunaDelMar.DataLayer.DataAccess_Settings.SETTING_NAMES;
+using ClientControl_LagunaDelMar.VModel;
 
 namespace ClientControl_LagunaDelMar
 {
@@ -24,6 +25,7 @@ namespace ClientControl_LagunaDelMar
         private bool conectado = false;
         DataAccess_Server daServer;
         SettingsTableAdapter taSettings = new SettingsTableAdapter();
+        VMLog log = new VMLog();
 
         private void frmMain_Load(object sender, EventArgs e){ }
 
@@ -34,6 +36,23 @@ namespace ClientControl_LagunaDelMar
             tbServerIP.Text = taSettings.getSettingByName(SETTING_NAMES.SERVER_URL);
             //tbServerIP.Text = "192.168.1.121";
             daServer = new DataAccess_Server(tbServerIP.Text);
+
+            setAutomaticControl(true);
+            printInLog("***Bienvenido***");
+        }
+
+        private void printInLog(string newMessage)
+        {
+            log.agregarNuevoMensaje(newMessage);
+            rtbLog.Text = log.ToString();
+        }
+
+        private void setAutomaticControl(bool isAuto)
+        {
+            rbAutomatico.Checked = isAuto;
+            rbManual.Checked = !isAuto;
+            gBoxControlAutomatico.Enabled = isAuto && this.conectado;
+            gBoxControlManual.Enabled = !isAuto && this.conectado;
         }
 
         /// <summary>
@@ -66,9 +85,13 @@ namespace ClientControl_LagunaDelMar
                 btnConectar.Text = "Conectar";
             }
             conectado = estado;
-            gBoxControl.Enabled = conectado;
             tbServerIP.ReadOnly = conectado;
             btnRequest.Enabled = conectado;
+
+            if (!conectado)
+                printInLog("Error al intentar conexión.");
+
+            setAutomaticControl(rbAutomatico.Checked);
         }
 
         private void btnConectar_Click(object sender, EventArgs e)
@@ -83,7 +106,7 @@ namespace ClientControl_LagunaDelMar
 
         private void btnRequest_Click(object sender, EventArgs e)
         {
-            daServer.moverValvula(tbGPM.Value);
+            daServer.moverValvula(tbGPM.Value, tbGrados.Value, rbAutomatico.Checked);
         }
 
         /// <summary>
@@ -104,26 +127,26 @@ namespace ClientControl_LagunaDelMar
                     {
                         this.BeginInvoke(new MethodInvoker(delegate
                         {
-                                //Se levanta la bandera para evitar accesos de otros hilos
-                                requestFlag = true;
+                            //Se levanta la bandera para evitar accesos de otros hilos
+                            requestFlag = true;
 
-                                data = daServer.tomarDatosActuales(); //Se solicitan datos del servidor
+                            data = daServer.tomarDatosActuales(); //Se solicitan datos del servidor
 
-                                //Si se desconecto el servidor, se muestra un mensaje de error
-                                if (data.success) 
-                                    showValues(data); //Si hubo respuesta del servidor, se muestra en pantalla
-                                else
-                                    //Si ocurrio un error al hacer la conexion, se muestra en pantalla
-                                    MessageBox.Show("Error al conectarse con el servidor. Detalles: " + data.errorMsg,
-                                        "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            //Si se desconecto el servidor, se muestra un mensaje de error
+                            if (data.success) 
+                                showValues(data); //Si hubo respuesta del servidor, se muestra en pantalla
 
-                                //Se marca el servidor como desconectado
-                                setConnectionStatus(data.success);
+                            //Se marca el servidor como desconectado
+                            setConnectionStatus(data.success);
 
-                                //Al terminar la solicitud, se desbloquea el codigo delegado
-                                requestFlag = false;
-                            }
-                        ));
+                            //Si ocurrio un error al hacer la conexion, se muestra en pantalla
+                            if (!data.success)
+                                MessageBox.Show("Error al conectarse con el servidor. Detalles: " + data.errorMsg,
+                                    "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            //Al terminar la solicitud, se desbloquea el codigo delegado
+                            requestFlag = false;
+                        }));
                     }
                     Thread.Sleep(800);
                 } while (conectado) ;
@@ -136,6 +159,7 @@ namespace ClientControl_LagunaDelMar
         {
             tbGPMObjActual.Text = decimal.Parse(data.GPM).ToString();
             tbGPMM.Text = data.GPMM;
+            printInLog(data.ToString());
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -155,6 +179,23 @@ namespace ClientControl_LagunaDelMar
         {
             Form frmAbout = new Form_About();
             frmAbout.ShowDialog();
+        }
+
+        private void rbAutomatico_CheckedChanged(object sender, EventArgs e)
+        {
+            setAutomaticControl(((RadioButton)sender).Checked);
+        }
+
+        private void rbManual_CheckedChanged(object sender, EventArgs e)
+        {
+            setAutomaticControl(!((RadioButton)sender).Checked);
+        }
+
+        private void clearLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.rtbLog.Text = string.Empty;
+            log.clearLog();
+            printInLog("Log cleared.");
         }
     }
 

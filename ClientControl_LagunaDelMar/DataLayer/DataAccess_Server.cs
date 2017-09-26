@@ -35,9 +35,10 @@ namespace ClientControl_LagunaDelMar.DataLayer
         /// </summary>
         /// <param name="GPM"></param>
         /// <returns></returns>
-        public ValveParameters moverValvula(decimal GPM)
+        public ValveParameters moverValvula(decimal GPM,decimal grados,bool automatico)
         {
-            String urlParams = "mover?GPM=" + GPM;
+            String urlParams = String.Format("mover?GPM={0}&servoDegrees={1}&autoControl={2}", GPM, grados, automatico?1:0);
+            //String urlParams = "mover?GPM=" + GPM + "&automatico=";
             return getValveData(urlParams);
         }
 
@@ -77,12 +78,19 @@ namespace ClientControl_LagunaDelMar.DataLayer
             public String servoDegrees { get; set; }
             public String GPMM { get; set; }
             public bool success { get; set; }
+            public bool autoControl { get; set; }
             public String errorMsg { get; set; }
+            
             public ValveParameters()
             {
                 this.GPM = "0";
                 this.servoDegrees = "0";
                 this.GPMM = "0";
+            }
+
+            public override string ToString()
+            {
+                return String.Format($"GPM = {this.GPM}, ServoDegrees = {this.servoDegrees}, GPMM = {this.GPMM}");
             }
         }
     }
